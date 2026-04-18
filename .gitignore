@@ -1,0 +1,33 @@
+### IntelliJ IDEA ###
+.idea/
+*.iml
+*.iws
+*.ipr
+
+### OS ###
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+
+### Environment ###
+.env
+.env.*
+!.env.example
+
+### Logs ###
+*.log
+logs/
+
+### Maven ###
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+### Spring Boot secrets ###
+application-local.properties
+application-prod.properties
+application-local.yml
+application-prod.yml
