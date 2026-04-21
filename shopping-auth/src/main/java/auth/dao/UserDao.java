@@ -1,6 +1,6 @@
 package auth.dao;
 
-import auth.model.User;
+import auth.entity.User;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
@@ -31,10 +31,5 @@ public class UserDao {
                 .createQuery("FROM User u WHERE u.email = :email", User.class)
                 .setParameter("email", email)
                 .uniqueResultOptional();
-    }
-
-    public Optional<User> findById(Long userId) {
-        User user = sessionFactory.getCurrentSession().get(User.class, userId);
-        return Optional.ofNullable(user);
     }
 }

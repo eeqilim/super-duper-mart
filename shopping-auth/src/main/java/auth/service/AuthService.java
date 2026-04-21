@@ -4,11 +4,11 @@ import auth.config.JwtProvider;
 import auth.dao.UserDao;
 import auth.dto.AuthResponse;
 import auth.dto.LoginRequest;
-import auth.dto.RegisterRequest;
-import auth.dto.RegisterResponse;
+import auth.dto.SignupRequest;
+import auth.dto.SignupResponse;
 import auth.exception.DuplicateUserException;
 import auth.exception.InvalidCredentialsException;
-import auth.model.User;
+import auth.entity.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +27,12 @@ public class AuthService {
         this.jwtProvider = jwtProvider;
     }
 
-    public RegisterResponse register(RegisterRequest request) {
-        if (userDao.findByUsername(request.getUsername()).isPresent()) {
+    public SignupResponse signup(SignupRequest request) {
+        if (userDao.findByUsername(request.getUsername().trim()).isPresent()) {
             throw new DuplicateUserException("Username already exists.");
         }
 
-        if (userDao.findByEmail(request.getEmail()).isPresent()) {
+        if (userDao.findByEmail(request.getEmail().trim()).isPresent()) {
             throw new DuplicateUserException("Email already exists.");
         }
 
@@ -44,7 +44,7 @@ public class AuthService {
 
         userDao.save(user);
 
-        return new RegisterResponse(user.getUserId(), user.getUsername(), user.getEmail());
+        return new SignupResponse(user.getUserId(), user.getUsername(), user.getEmail());
     }
 
     @Transactional(readOnly = true)

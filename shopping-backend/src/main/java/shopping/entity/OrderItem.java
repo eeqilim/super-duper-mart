@@ -1,4 +1,4 @@
-package shopping.model;
+package shopping.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,12 +34,4 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-
-    public OrderItem(Double purchasedPrice, Double wholesalePrice, Integer quantity, Order order, Product product) {
-        this.purchasedPrice = purchasedPrice;
-        this.wholesalePrice = wholesalePrice;
-        this.quantity = quantity;
-        this.order = order;
-        this.product = product;
-    }
 }

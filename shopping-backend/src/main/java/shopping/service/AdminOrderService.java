@@ -7,10 +7,10 @@ import shopping.dto.OrderDto;
 import shopping.dto.OrderItemDto;
 import shopping.exception.InvalidOrderStatusException;
 import shopping.exception.ResourceNotFoundException;
-import shopping.model.Order;
-import shopping.model.OrderItem;
-import shopping.model.OrderStatus;
-import shopping.model.Product;
+import shopping.entity.Order;
+import shopping.entity.OrderItem;
+import shopping.entity.OrderStatus;
+import shopping.entity.Product;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,15 +26,15 @@ public class AdminOrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderDto> getOrdersForAdmin(int page, int size) {
-        return orderDao.findAllForAdmin(page, size)
+    public List<OrderDto> getAllOrdersForAdmin() {
+        return orderDao.findAll()
                 .stream()
                 .map(this::toOrderDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public OrderDto getOrderById(Long orderId) {
+    public OrderDto getOrderDetail(Long orderId) {
         Order order = orderDao.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
         return toOrderDto(order);
     }

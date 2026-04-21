@@ -1,4 +1,4 @@
-package auth.model;
+package auth.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,20 +24,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    /**
-     * 0 = USER
-     * 1 = ADMIN
-     */
     @Column(nullable = false)
-    private Integer role;
+    private Integer role;  // 0 = USER, 1 = ADMIN
 
     @Column(nullable = false, unique = true)
     private String username;
-
-    public User(String email, String password, Integer role, String username) {
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.username = username;
-    }
 }

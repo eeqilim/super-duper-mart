@@ -1,6 +1,6 @@
 package auth.config;
 
-import auth.model.User;
+import auth.entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,14 +33,10 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(String.valueOf(user.getUserId()))
                 .claim("username", user.getUsername())
-                .claim("role", mapRole(user.getRole()))
+                .claim("role", user.getRole() == 1 ? "ROLE_ADMIN" : "ROLE_USER")
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(getKey())
                 .compact();
-    }
-
-    private String mapRole(Integer role) {
-        return role != null && role == 1 ? "ROLE_ADMIN" : "ROLE_USER";
     }
 }

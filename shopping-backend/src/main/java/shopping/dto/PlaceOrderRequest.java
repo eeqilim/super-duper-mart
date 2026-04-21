@@ -11,5 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 public class PlaceOrderRequest {
 
-    private List<OrderItemRequest> items;
+    private List<OrderItemRequest> order;
 }

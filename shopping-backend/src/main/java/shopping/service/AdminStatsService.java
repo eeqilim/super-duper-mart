@@ -3,8 +3,8 @@ package shopping.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.dao.OrderItemDao;
+import shopping.dto.PopularProductDto;
 import shopping.dto.ProductProfitDto;
-import shopping.dto.ProductSalesDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,15 +19,10 @@ public class AdminStatsService {
         this.orderItemDao = orderItemDao;
     }
 
-    public Long getTotalSoldItems() {
-        Long result = orderItemDao.getTotalSoldItems();
-        return result != null ? result : 0L;
-    }
-
-    public List<ProductSalesDto> getTop3SoldProducts() {
-        return orderItemDao.getTop3SoldProducts()
-                .stream()
-                .map(row -> new ProductSalesDto(
+    @Transactional(readOnly = true)
+    public List<PopularProductDto> getMostPopularProduct(int limit) {
+        return orderItemDao.findPopularProducts(limit).stream()
+                .map(row -> new PopularProductDto(
                         ((Number) row[0]).longValue(),
                         (String) row[1],
                         ((Number) row[2]).longValue()
@@ -35,13 +30,14 @@ public class AdminStatsService {
                 .collect(Collectors.toList());
     }
 
-    public ProductProfitDto getMostProfitableProduct() {
-        Object[] row = orderItemDao.getMostProfitableProduct();
-        if (row == null) return null;
-        return new ProductProfitDto(
-                ((Number) row[0]).longValue(),
-                (String) row[1],
-                ((Number) row[2]).doubleValue()
-        );
+    @Transactional(readOnly = true)
+    public List<ProductProfitDto> getMostProfitableProduct(int limit) {
+        return orderItemDao.findProfitableProducts(limit).stream()
+                .map(row -> new ProductProfitDto(
+                        ((Number) row[0]).longValue(),
+                        (String) row[1],
+                        ((Number) row[2]).doubleValue()
+                ))
+                .collect(Collectors.toList());
     }
 }

@@ -24,7 +24,7 @@ public class HibernateConfig {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
         factory.setDataSource(dataSource);
-        factory.setPackagesToScan("auth.model");
+        factory.setPackagesToScan("auth.entity");
         factory.setHibernateProperties(hibernateProperties());
         return factory;
     }

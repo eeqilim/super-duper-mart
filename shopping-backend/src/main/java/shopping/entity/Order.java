@@ -1,4 +1,4 @@
-package shopping.model;
+package shopping.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,19 +35,8 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    public Order(LocalDateTime datePlaced, OrderStatus orderStatus, User user) {
-        this.datePlaced = datePlaced;
-        this.orderStatus = orderStatus;
-        this.user = user;
-    }
-
     public void addOrderItem(OrderItem orderItem) {
         this.orderItems.add(orderItem);
         orderItem.setOrder(this);
-    }
-
-    public void removeOrderItem(OrderItem orderItem) {
-        this.orderItems.remove(orderItem);
-        orderItem.setOrder(null);
     }
 }

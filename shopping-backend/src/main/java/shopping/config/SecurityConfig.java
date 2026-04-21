@@ -27,8 +27,10 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/products", "/products/**").permitAll()
-                .antMatchers("/orders/**", "/watchlist/**").hasRole("USER")
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/products/**").hasRole("ADMIN")
+                .antMatchers("/orders/**").permitAll()
+                .antMatchers("/watchlist/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

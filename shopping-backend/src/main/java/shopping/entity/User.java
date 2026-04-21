@@ -1,4 +1,4 @@
-package shopping.model;
+package shopping.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,22 +20,9 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
-    /**
-     * 0 = USER, 1 = ADMIN
-     */
     @Column(nullable = false)
-    private Integer role;
+    private Integer role; // 0 = USER, 1 = ADMIN
 
     @Column(name = "username", nullable = false)
     private String username;
-
-    public User(Long userId) {
-        this.userId = userId;
-    }
-
-    public User(Long userId, Integer role, String username) {
-        this.userId = userId;
-        this.role = role;
-        this.username = username;
-    }
 }

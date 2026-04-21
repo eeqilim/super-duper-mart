@@ -7,9 +7,9 @@ import shopping.dao.UserDao;
 import shopping.dao.WatchlistDao;
 import shopping.dto.ProductDto;
 import shopping.exception.ResourceNotFoundException;
-import shopping.model.Product;
-import shopping.model.User;
-import shopping.model.Watchlist;
+import shopping.entity.Product;
+import shopping.entity.User;
+import shopping.entity.Watchlist;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +36,7 @@ public class WatchlistService {
             return;
         }
 
-        Watchlist watchlist = new Watchlist();
+        Watchlist watchlist = new Watchlist(userId, productId);
         watchlist.setUser(user);
         watchlist.setProduct(product);
         watchlistDao.save(watchlist);
@@ -49,16 +49,8 @@ public class WatchlistService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDto> getAllWatchlistByUserId(Long userId) {
+    public List<ProductDto> getAllWatchlist(Long userId) {
         return watchlistDao.findByUserId(userId)
-                .stream()
-                .map(w -> toProductDto(w.getProduct()))
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<ProductDto> getInStockWatchlistByUserId(Long userId) {
-        return watchlistDao.findInStockByUserId(userId)
                 .stream()
                 .map(w -> toProductDto(w.getProduct()))
                 .collect(Collectors.toList());

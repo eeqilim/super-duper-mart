@@ -1,4 +1,4 @@
-package shopping.model;
+package shopping.entity;
 
 public enum OrderStatus {
     PROCESSING,

@@ -1,4 +1,4 @@
-package shopping.model;
+package shopping.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -19,20 +19,20 @@ public class WatchlistController {
         this.watchlistService = watchlistService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ProductDto>> getWatchlist(Authentication auth) {
+    @GetMapping("/products/all")
+    public ResponseEntity<List<ProductDto>> getAllWatchlist(Authentication auth) {
         Long userId = extractUserId(auth);
-        return ResponseEntity.ok(watchlistService.getAllWatchlistByUserId(userId));
+        return ResponseEntity.ok(watchlistService.getAllWatchlist(userId));
     }
 
-    @PostMapping("/{productId}")
+    @PostMapping("/product/{productId}")
     public ResponseEntity<Void> addToWatchlist(@PathVariable Long productId, Authentication auth) {
         Long userId = extractUserId(auth);
         watchlistService.addToWatchlist(userId, productId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/product/{productId}")
     public ResponseEntity<Void> removeFromWatchlist(@PathVariable Long productId, Authentication auth) {
         Long userId = extractUserId(auth);
         watchlistService.removeFromWatchlist(userId, productId);

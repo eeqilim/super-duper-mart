@@ -11,7 +11,7 @@ import shopping.dto.OrderItemRequest;
 import shopping.exception.InvalidOrderStatusException;
 import shopping.exception.NotEnoughInventoryException;
 import shopping.exception.ResourceNotFoundException;
-import shopping.model.*;
+import shopping.entity.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -98,7 +98,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderDto> getOrdersByUserId(Long userId) {
+    public List<OrderDto> getAllOrdersByUserId(Long userId) {
         return orderDao.findByUserId(userId)
                 .stream()
                 .map(this::toOrderDto)
@@ -106,7 +106,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderDto getOrderById(Long orderId, Long userId) {
+    public OrderDto getOrderDetail(Long orderId, Long userId) {
         Order order = orderDao.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
 
         if (!order.getUser().getUserId().equals(userId)) {

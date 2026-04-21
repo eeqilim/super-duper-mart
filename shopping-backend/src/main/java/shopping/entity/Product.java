@@ -1,4 +1,4 @@
-package shopping.model;
+package shopping.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,12 +40,4 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<Watchlist> watchlistItems = new ArrayList<>();
-
-    public Product(String name, String description, Double wholesalePrice, Double retailPrice, Integer quantity) {
-        this.name = name;
-        this.description = description;
-        this.wholesalePrice = wholesalePrice;
-        this.retailPrice = retailPrice;
-        this.quantity = quantity;
-    }
 }

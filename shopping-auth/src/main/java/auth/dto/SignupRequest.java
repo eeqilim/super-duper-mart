@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
-public class RegisterRequest {
+public class SignupRequest {
 
     @NotBlank(message = "Username is required")
     private String username;
@@ -17,6 +17,6 @@ public class RegisterRequest {
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters")
+    @Size(min = 3, message = "Password must be at least 3 characters")
     private String password;
 }

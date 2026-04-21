@@ -3,7 +3,7 @@ package shopping.dao;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import shopping.model.Product;
+import shopping.entity.Product;
 
 import java.util.List;
 import java.util.Optional;

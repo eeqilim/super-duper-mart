@@ -1,10 +1,11 @@
 package shopping.dao;
 
+import lombok.var;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import shopping.model.Order;
+import shopping.entity.Order;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,13 +58,9 @@ public class OrderDao {
                 .getResultList();
     }
 
-    public List<Order> findAllForAdmin(int page, int size) {
-        return getCurrentSession()
-                .createQuery("SELECT o FROM Order o " +
-                        "JOIN FETCH o.user " +
-                        "ORDER BY o.datePlaced DESC, o.orderId DESC", Order.class)
-                .setFirstResult(page * size)
-                .setMaxResults(size)
+    public List<Order> findAll() {
+        return sessionFactory.getCurrentSession()
+                .createQuery("FROM Order o ORDER BY o.datePlaced DESC", Order.class)
                 .getResultList();
     }
 }
