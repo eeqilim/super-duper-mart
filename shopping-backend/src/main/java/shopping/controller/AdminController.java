@@ -21,7 +21,7 @@ public class AdminController {
     }
 
     @PatchMapping("/orders/{orderId}/complete")
-    public ResponseEntity<OrderDto> completeOrder(@PathVariable Long orderId) {
+    public ResponseEntity<AdminOrderDto> completeOrder(@PathVariable Long orderId) {
         return ResponseEntity.ok(adminOrderService.completeOrder(orderId));
     }
 

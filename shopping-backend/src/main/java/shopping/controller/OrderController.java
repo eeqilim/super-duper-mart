@@ -10,7 +10,6 @@ import shopping.service.AdminOrderService;
 import shopping.service.OrderService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -32,7 +31,7 @@ public class OrderController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<OrderDto>> getAllOrders(Authentication auth) {
+    public ResponseEntity<?> getAllOrders(Authentication auth) {
         if (isAdmin(auth)) {
             return ResponseEntity.ok(adminOrderService.getAllOrdersForAdmin());
         }
@@ -42,7 +41,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDto> getOrderDetail(@PathVariable Long orderId, Authentication auth) {
+    public ResponseEntity<?> getOrderDetail(@PathVariable Long orderId, Authentication auth) {
         if (isAdmin(auth)) {
             return ResponseEntity.ok(adminOrderService.getOrderDetail(orderId));
         }
@@ -52,7 +51,7 @@ public class OrderController {
     }
 
     @PatchMapping("/{orderId}/cancel")
-    public ResponseEntity<OrderDto> cancelOrder(@PathVariable Long orderId, Authentication auth) {
+    public ResponseEntity<?> cancelOrder(@PathVariable Long orderId, Authentication auth) {
         if (isAdmin(auth)) {
             return ResponseEntity.ok(adminOrderService.cancelOrder(orderId));
         }

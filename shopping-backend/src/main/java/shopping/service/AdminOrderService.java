@@ -3,6 +3,7 @@ package shopping.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.dao.OrderDao;
+import shopping.dto.AdminOrderDto;
 import shopping.dto.OrderDto;
 import shopping.dto.OrderItemDto;
 import shopping.exception.InvalidOrderStatusException;
@@ -26,20 +27,20 @@ public class AdminOrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderDto> getAllOrdersForAdmin() {
+    public List<AdminOrderDto> getAllOrdersForAdmin() {
         return orderDao.findAll()
                 .stream()
-                .map(this::toOrderDto)
+                .map(this::toAdminOrderDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public OrderDto getOrderDetail(Long orderId) {
+    public AdminOrderDto getOrderDetail(Long orderId) {
         Order order = orderDao.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
-        return toOrderDto(order);
+        return toAdminOrderDto(order);
     }
 
-    public OrderDto completeOrder(Long orderId) {
+    public AdminOrderDto completeOrder(Long orderId) {
         Order order = orderDao.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
 
         if (order.getOrderStatus() == OrderStatus.CANCELED) {
@@ -52,14 +53,14 @@ public class AdminOrderService {
 
         order.setOrderStatus(OrderStatus.COMPLETED);
         Order updated = orderDao.save(order);
-        return toOrderDto(updated);
+        return toAdminOrderDto(updated);
     }
 
-    public OrderDto cancelOrder(Long orderId) {
+    public AdminOrderDto cancelOrder(Long orderId) {
         Order order = orderDao.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
 
         if (order.getOrderStatus() == OrderStatus.COMPLETED) {
-            throw new InvalidOrderStatusException("Completed orders cannot be canceled.");
+            throw new InvalidOrderStatusException("Completed order cannot be canceled.");
         }
 
         if (order.getOrderStatus() == OrderStatus.CANCELED) {
@@ -73,19 +74,21 @@ public class AdminOrderService {
 
         order.setOrderStatus(OrderStatus.CANCELED);
         Order updated = orderDao.save(order);
-        return toOrderDto(updated);
+        return toAdminOrderDto(updated);
     }
 
-    private OrderDto toOrderDto(Order order) {
+    private AdminOrderDto toAdminOrderDto(Order order) {
         List<OrderItemDto> items = order.getOrderItems()
                 .stream()
                 .map(this::toOrderItemDto)
                 .collect(Collectors.toList());
 
-        return new OrderDto(
+        return new AdminOrderDto(
                 order.getOrderId(),
                 order.getDatePlaced(),
                 order.getOrderStatus().name(),
+                order.getUser().getUserId(),
+                order.getUser().getUsername(),
                 items
         );
     }

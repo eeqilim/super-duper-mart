@@ -80,7 +80,7 @@ public class OrderService {
         }
 
         if (order.getOrderStatus() == OrderStatus.COMPLETED) {
-            throw new InvalidOrderStatusException("Completed orders cannot be canceled.");
+            throw new InvalidOrderStatusException("Completed order cannot be canceled.");
         }
 
         if (order.getOrderStatus() == OrderStatus.CANCELED) {

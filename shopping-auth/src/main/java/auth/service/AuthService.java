@@ -50,10 +50,10 @@ public class AuthService {
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
         User user = userDao.findByUsername(request.getUsername().trim())
-                .orElseThrow(() -> new InvalidCredentialsException("Invalid username or password."));
+                .orElseThrow(() -> new InvalidCredentialsException("Incorrect credentials, please try again."));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new InvalidCredentialsException("Invalid username or password.");
+            throw new InvalidCredentialsException("Incorrect credentials, please try again.");
         }
 
         String token = jwtProvider.generateToken(user);
