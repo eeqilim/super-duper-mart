@@ -1,0 +1,38 @@
+<mat-toolbar color="primary" class="navbar">
+
+  <span class="brand" routerLink="/products">Super Duper Mart</span>
+  <span class="spacer"></span>
+
+  <ng-container *ngIf="authService.isLoggedIn()">
+
+    <ng-container *ngIf="!authService.isAdmin()">
+      <button mat-button routerLink="/products">Products</button>
+      <button mat-button routerLink="/user/home">Home</button>
+    </ng-container>
+
+    <ng-container *ngIf="authService.isAdmin()">
+      <button mat-button routerLink="/admin/home">Dashboard</button>
+      <button mat-button routerLink="/admin/product-management">Products</button>
+      <button mat-button routerLink="/admin/order-management">Orders</button>
+    </ng-container>
+
+  </ng-container>
+
+  <ng-container *ngIf="authService.isLoggedIn() && !authService.isAdmin()">
+    <button mat-icon-button routerLink="/cart">
+      <mat-icon>shopping_cart</mat-icon>
+      <span class="cart-badge" *ngIf="cartCount > 0">
+        {{ cartCount }}
+      </span>
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="!authService.isLoggedIn()">
+    <button mat-button routerLink="/auth">Login</button>
+  </ng-container>
+
+  <ng-container *ngIf="authService.isLoggedIn()">
+    <button mat-button (click)="logout()">Logout</button>
+  </ng-container>
+
+</mat-toolbar>

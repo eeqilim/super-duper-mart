@@ -1,0 +1,78 @@
+.admin-page {
+  padding: 24px;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.form-card,
+.table-card {
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.product-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  mat-form-field:nth-child(2) {
+    grid-column: span 2;
+  }
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+
+    mat-form-field:nth-child(2) {
+      grid-column: span 1;
+    }
+  }
+}
+
+.form-actions {
+  grid-column: span 2;
+  display: flex;
+  gap: 12px;
+
+  @media (max-width: 800px) {
+    grid-column: span 1;
+  }
+}
+
+.search-field {
+  width: 320px;
+  margin-bottom: 16px;
+}
+
+table {
+  width: 100%;
+}
+
+a[mat-stroked-button],
+button {
+  margin-right: 8px;
+}
+
+.success {
+  background: #dcfce7;
+  color: #166534;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}

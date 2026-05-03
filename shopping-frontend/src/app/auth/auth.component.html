@@ -1,0 +1,68 @@
+<div class="auth-page">
+    <mat-card class="auth-card">
+        <mat-card-title>
+            {{ isLoginMode ? 'Login' : 'Signup' }}
+        </mat-card-title>
+
+        <mat-card-content>
+            <div class="error-box" *ngIf="errorMessage">
+                {{ errorMessage }}
+            </div>
+
+            <form *ngIf="isLoginMode" (ngSubmit)="login()" #loginForm="ngForm">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Username</mat-label>
+                    <input matInput name="loginUsername" [(ngModel)]="loginData.username" required
+                        autocomplete="username" />
+                    <mat-error>Username is required</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" name="loginPassword" [(ngModel)]="loginData.password" required
+                        autocomplete="current-password" />
+                    <mat-error>Password is required</mat-error>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" class="full-width" type="submit"
+                    [disabled]="loginForm.invalid || loading">
+                    {{ loading ? 'Logging in...' : 'Login' }}
+                </button>
+            </form>
+
+            <form *ngIf="!isLoginMode" (ngSubmit)="signup()" #signupForm="ngForm">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Username</mat-label>
+                    <input matInput name="signupUsername" [(ngModel)]="signupData.username" required minlength="3"
+                        autocomplete="username" />
+                    <mat-error>Username must be at least 3 characters</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput type="email" name="signupEmail" [(ngModel)]="signupData.email" required email
+                        autocomplete="email" />
+                    <mat-error>Valid email is required</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" name="signupPassword" [(ngModel)]="signupData.password" required
+                        minlength="6" autocomplete="new-password" />
+                    <mat-error>Password must be at least 6 characters</mat-error>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" class="full-width" type="submit"
+                    [disabled]="signupForm.invalid || loading">
+                    {{ loading ? 'Creating account...' : 'signup' }}
+                </button>
+            </form>
+        </mat-card-content>
+
+        <mat-card-actions class="center-actions">
+            <button mat-button color="primary" type="button" (click)="toggleMode()">
+                {{ isLoginMode ? 'Need an account? signup' : 'Already have an account? Login' }}
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</div>

@@ -1,0 +1,84 @@
+.cart-page {
+  padding: 24px;
+}
+
+mat-card {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+mat-card-title {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+table {
+  width: 100%;
+  margin-top: 16px;
+}
+
+a {
+  color: #2563eb;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quantity-input {
+  width: 60px;
+  padding: 6px;
+  text-align: center;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+}
+
+.cart-summary {
+  display: flex;
+  justify-content: flex-end;
+  gap: 32px;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.empty-cart {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #6b7280;
+
+  mat-icon {
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 12px;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+}
+
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

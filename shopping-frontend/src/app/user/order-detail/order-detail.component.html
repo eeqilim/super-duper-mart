@@ -1,0 +1,97 @@
+<div class="order-page">
+
+    <button mat-button routerLink="/user/home">← Back</button>
+
+    <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <div class="success" *ngIf="message">{{ message }}</div>
+
+    <mat-card *ngIf="order" class="order-card">
+
+        <mat-card-title>
+            Order #{{ order.id }}
+        </mat-card-title>
+
+        <mat-card-content>
+
+            <div class="order-info">
+                <div>
+                    <strong>Date:</strong>
+                    {{ order.datePlaced | date:'medium' }}
+                </div>
+
+                <div>
+                    <strong>Status:</strong>
+                    <span class="status-badge" [ngClass]="statusClass(order.orderStatus)">
+                        {{ order.orderStatus }}
+                    </span>
+                </div>
+
+                <div>
+                    <strong>Items:</strong>
+                    {{ order.orderItems.length }}
+                </div>
+            </div>
+
+            <table mat-table [dataSource]="order.orderItems" class="mat-elevation-z1">
+
+                <ng-container matColumnDef="product">
+                    <th mat-header-cell *matHeaderCellDef>Product</th>
+                    <td mat-cell *matCellDef="let item">
+                        <a [routerLink]="['/products', item.product.productId]">
+                            {{ item.product.name }}
+                        </a>
+                    </td>
+                </ng-container>
+
+                <!-- Price -->
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef>Price</th>
+                    <td mat-cell *matCellDef="let item">
+                        {{ item.purchasedPrice | currency }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef>Qty</th>
+                    <td mat-cell *matCellDef="let item">
+                        {{ item.quantity }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subtotal">
+                    <th mat-header-cell *matHeaderCellDef>Subtotal</th>
+                    <td mat-cell *matCellDef="let item">
+                        {{ getSubtotal(item) | currency }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let item">
+                        <a mat-stroked-button color="primary" [routerLink]="['/products', item.product.productId]">
+                            View Product
+                        </a>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <div class="total">
+                Total: {{ getTotal() | currency }}
+            </div>
+
+        </mat-card-content>
+
+        <mat-card-actions>
+
+            <button mat-stroked-button color="warn" *ngIf="canCancel()" (click)="cancelOrder()">
+                Cancel Order
+            </button>
+
+        </mat-card-actions>
+
+    </mat-card>
+
+</div>

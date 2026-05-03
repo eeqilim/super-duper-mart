@@ -1,0 +1,96 @@
+<div class="admin-page">
+
+    <div class="page-header">
+        <h2>Order Management</h2>
+
+        <div class="filters">
+            <button mat-stroked-button (click)="setFilter('ALL')" [class.active]="filter==='ALL'">All</button>
+            <button mat-stroked-button (click)="setFilter('PENDING')"
+                [class.active]="filter==='PENDING'">Pending</button>
+            <button mat-stroked-button (click)="setFilter('COMPLETED')"
+                [class.active]="filter==='COMPLETED'">Completed</button>
+            <button mat-stroked-button (click)="setFilter('CANCELED')"
+                [class.active]="filter==='CANCELED'">Canceled</button>
+        </div>
+    </div>
+
+    <div class="success" *ngIf="message">{{ message }}</div>
+    <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <mat-card class="table-card">
+        <mat-card-title>
+            Orders · {{ filteredOrders.length }}
+        </mat-card-title>
+
+        <mat-card-content>
+
+            <table mat-table [dataSource]="filteredOrders" class="mat-elevation-z1">
+
+                <ng-container matColumnDef="orderId">
+                    <th mat-header-cell *matHeaderCellDef>ID</th>
+                    <td mat-cell *matCellDef="let o">#{{ o.orderId }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="customer">
+                    <th mat-header-cell *matHeaderCellDef>Customer</th>
+                    <td mat-cell *matCellDef="let o">
+                        {{ o.user?.username || o.userId || 'N/A' }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="datePlaced">
+                    <th mat-header-cell *matHeaderCellDef>Date</th>
+                    <td mat-cell *matCellDef="let o">
+                        {{ o.datePlaced | date:'medium' }}
+                    </td>
+                </ng-container>
+
+                <!-- Items -->
+                <ng-container matColumnDef="items">
+                    <th mat-header-cell *matHeaderCellDef>Items</th>
+                    <td mat-cell *matCellDef="let o">
+                        {{ o.items.length }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="total">
+                    <th mat-header-cell *matHeaderCellDef>Total</th>
+                    <td mat-cell *matCellDef="let o">
+                        {{ getOrderTotal(o) | currency }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="orderStatus">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let o">
+                        <span class="status-badge" [ngClass]="statusClass(o.orderStatus)">{{ o.orderStatus }}</span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let o">
+
+                        <a mat-stroked-button color="primary" [routerLink]="['/orders', o.orderId]">View</a>
+
+                        <button mat-stroked-button color="accent" *ngIf="canUpdate(o)"
+                            (click)="completeOrder(o.orderId)">Complete</button>
+
+                        <button mat-stroked-button color="warn" *ngIf="canUpdate(o)"
+                            (click)="cancelOrder(o.orderId)">Cancel</button>
+
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <div class="empty" *ngIf="filteredOrders.length === 0">
+                No orders match this filter
+            </div>
+
+        </mat-card-content>
+    </mat-card>
+
+</div>
