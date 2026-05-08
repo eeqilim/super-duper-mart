@@ -7,10 +7,7 @@
 
     <mat-card *ngIf="order" class="order-card">
 
-        <mat-card-title>
-            Order #{{ order.id }}
-        </mat-card-title>
-
+        <mat-card-title>Order #{{ order.orderId }}</mat-card-title>
         <mat-card-content>
 
             <div class="order-info">
@@ -28,22 +25,17 @@
 
                 <div>
                     <strong>Items:</strong>
-                    {{ order.orderItems.length }}
+                    {{ order.order.length }}
                 </div>
             </div>
 
-            <table mat-table [dataSource]="order.orderItems" class="mat-elevation-z1">
+            <table mat-table [dataSource]="order.order" class="mat-elevation-z1">
 
-                <ng-container matColumnDef="product">
+                <ng-container matColumnDef="productName">
                     <th mat-header-cell *matHeaderCellDef>Product</th>
-                    <td mat-cell *matCellDef="let item">
-                        <a [routerLink]="['/products', item.product.productId]">
-                            {{ item.product.name }}
-                        </a>
-                    </td>
+                    <td mat-cell *matCellDef="let item">{{ item.productName }}</td>
                 </ng-container>
 
-                <!-- Price -->
                 <ng-container matColumnDef="price">
                     <th mat-header-cell *matHeaderCellDef>Price</th>
                     <td mat-cell *matCellDef="let item">
@@ -68,7 +60,7 @@
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let item">
-                        <a mat-stroked-button color="primary" [routerLink]="['/products', item.product.productId]">
+                        <a mat-stroked-button color="primary" [routerLink]="['/products', item.productId]">
                             View Product
                         </a>
                     </td>

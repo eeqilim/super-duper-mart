@@ -1,0 +1,14 @@
+<div class="admin-page">
+    <h2>Edit Product</h2>
+
+    <div class="success" *ngIf="message">{{ message }}</div>
+    <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <app-product-form
+        *ngIf="product"
+        mode="edit"
+        [product]="product"
+        (formSubmit)="updateProduct($event)"
+        (formCancel)="cancel()">
+    </app-product-form>
+</div>

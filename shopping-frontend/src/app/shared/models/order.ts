@@ -1,12 +1,24 @@
-import { OrderItem } from "./order-item";
-import { User } from "./user";
+export type OrderStatus = 'PROCESSING' | 'COMPLETED' | 'CANCELED';
+
+export interface OrderItem {
+    productId: number;
+    productName: string;
+    quantity: number;
+    purchasedPrice: number;
+}
 
 export interface Order {
-    id: number;
-    userId: number;
-    user?: User;
-    orderItems: OrderItem[];
-    orderStatus: 'PENDING' | 'COMPLETED' | 'CANCELED';
+    orderId: number;
     datePlaced: string;
-    totalAmount?: number;
+    orderStatus: OrderStatus;
+    order: OrderItem[];
+}
+
+export interface AdminOrder {
+    orderId: number;
+    datePlaced: string;
+    orderStatus: OrderStatus;
+    userId: number;
+    userName: string;
+    order: OrderItem[];
 }

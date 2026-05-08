@@ -23,6 +23,11 @@ export class NavbarComponent implements OnInit {
         });
     }
 
+    getHomeLink(): string {
+        if (!this.authService.isLoggedIn()) return '/auth';
+        return this.authService.isAdmin() ? '/admin/home' : '/user/home';
+    }
+
     logout(): void {
         this.authService.logout();
         this.router.navigate(['/auth']);

@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Product } from '../models/product';
-import { FrequentPurchasedProduct, PopularProduct, ProfitableProduct, RecentPurchasedItem } from '../models/stats';
-import { Order } from '../models/order';
 
-@Injectable({ providedIn: 'root' })
+import { AdminProduct, CreateProductRequest, Product, UpdateProductRequest } from '../models/product';
+import { PopularProduct, ProductProfit, PurchasedProduct } from '../models/stats';
+import { OrderItemRequest } from '../models/cart';
+import { AdminOrder, Order } from '../models/order';
+
+@Injectable({
+    providedIn: 'root'
+})
 export class ApiService {
     private readonly BASE = 'http://localhost:8080';
 
@@ -19,34 +23,40 @@ export class ApiService {
         return this.http.get<Product>(`${this.BASE}/products/${productId}`);
     }
 
-    createProduct(product: Partial<Product>): Observable<Product> {
-        return this.http.post<Product>(`${this.BASE}/products`, product);
+    getAdminProducts(): Observable<AdminProduct[]> {
+        return this.http.get<AdminProduct[]>(`${this.BASE}/products/all`);
     }
 
-    updateProduct(productId: number, product: Partial<Product>): Observable<Product> {
-        return this.http.patch<Product>(`${this.BASE}/products/${productId}`, product);
+    getAdminProductById(productId: number): Observable<AdminProduct> {
+        return this.http.get<AdminProduct>(`${this.BASE}/products/${productId}`);
     }
 
-    getMostFrequentlyPurchasedProducts(limit: number): Observable<FrequentPurchasedProduct[]> {
-        return this.http.get<FrequentPurchasedProduct[]>(
-            `${this.BASE}/products/frequent/${limit}`
-        );
+    createProduct(request: CreateProductRequest): Observable<AdminProduct> {
+        return this.http.post<AdminProduct>(`${this.BASE}/products`, request);
     }
 
-    getMostRecentlyPurchasedProducts(limit: number): Observable<RecentPurchasedItem[]> {
-        return this.http.get<RecentPurchasedItem[]>(
-            `${this.BASE}/products/recent/${limit}`
-        );
+    updateProduct(productId: number, request: UpdateProductRequest): Observable<AdminProduct> {
+        return this.http.patch<AdminProduct>(`${this.BASE}/products/${productId}`, request);
     }
 
-    placeOrder(items: { productId: number; quantity: number }[]): Observable<Order> {
-        return this.http.post<Order>(`${this.BASE}/orders`, {
-            order: items
-        });
+    getMostFrequentlyPurchasedProducts(limit: number): Observable<PurchasedProduct[]> {
+        return this.http.get<PurchasedProduct[]>(`${this.BASE}/products/frequent/${limit}`);
+    }
+
+    getMostRecentlyPurchasedProducts(limit: number): Observable<PurchasedProduct[]> {
+        return this.http.get<PurchasedProduct[]>(`${this.BASE}/products/recent/${limit}`);
+    }
+
+    placeOrder(items: OrderItemRequest[]): Observable<Order> {
+        return this.http.post<Order>(`${this.BASE}/orders`, { order: items });
     }
 
     getOrders(): Observable<Order[]> {
         return this.http.get<Order[]>(`${this.BASE}/orders/all`);
+    }
+
+    getAdminOrders(): Observable<AdminOrder[]> {
+        return this.http.get<AdminOrder[]>(`${this.BASE}/orders/all`);
     }
 
     getOrderById(orderId: number): Observable<Order> {
@@ -57,8 +67,8 @@ export class ApiService {
         return this.http.patch<Order>(`${this.BASE}/orders/${orderId}/cancel`, {});
     }
 
-    completeOrder(orderId: number): Observable<Order> {
-        return this.http.patch<Order>(`${this.BASE}/orders/${orderId}/complete`, {});
+    completeOrder(orderId: number): Observable<AdminOrder> {
+        return this.http.patch<AdminOrder>(`${this.BASE}/orders/${orderId}/complete`, {});
     }
 
     getWatchlist(): Observable<Product[]> {
@@ -74,14 +84,10 @@ export class ApiService {
     }
 
     getMostPopularProducts(limit: number): Observable<PopularProduct[]> {
-        return this.http.get<PopularProduct[]>(
-            `${this.BASE}/products/popular/${limit}`
-        );
+        return this.http.get<PopularProduct[]>(`${this.BASE}/products/popular/${limit}`);
     }
 
-    getMostProfitableProducts(limit: number): Observable<ProfitableProduct[]> {
-        return this.http.get<ProfitableProduct[]>(
-            `${this.BASE}/products/profit/${limit}`
-        );
+    getMostProfitableProducts(limit: number): Observable<ProductProfit[]> {
+        return this.http.get<ProductProfit[]>(`${this.BASE}/products/profit/${limit}`);
     }
 }

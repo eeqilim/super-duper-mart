@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { CartItem } from '../../shared/models/cart-item';
+import { CartItem } from '../../shared/models/cart';
 import { CartService } from '../../shared/services/cart.service';
 import { ApiService } from '../../shared/services/api.service';
 
@@ -33,14 +33,14 @@ export class CartComponent implements OnInit {
 
     increaseQuantity(item: CartItem): void {
         this.cartService.updateQuantity(
-            item.product.id,
+            item.product.productId,
             item.quantity + 1
         );
     }
 
     decreaseQuantity(item: CartItem): void {
         this.cartService.updateQuantity(
-            item.product.id,
+            item.product.productId,
             item.quantity - 1
         );
     }
@@ -52,7 +52,7 @@ export class CartComponent implements OnInit {
             return;
         }
 
-        this.cartService.updateQuantity(item.product.id, quantity);
+        this.cartService.updateQuantity(item.product.productId, quantity);
     }
 
     removeItem(productId: number): void {
@@ -77,7 +77,7 @@ export class CartComponent implements OnInit {
             next: order => {
                 this.loading = false;
                 this.cartService.clearCart();
-                this.router.navigate(['/orders', order.id]);
+                this.router.navigate(['/orders', order.orderId]);
             },
             error: () => {
                 this.loading = false;

@@ -1,0 +1,138 @@
+.page {
+    padding: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.detail-card {
+    margin-top: 16px;
+    padding: 8px;
+}
+
+.product-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+.image-box {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    background: #f8fafc;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+        font-size: 96px;
+        width: 96px;
+        height: 96px;
+        color: #94a3b8;
+    }
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.price {
+    font-size: 32px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.desc {
+    margin: 0;
+    line-height: 1.7;
+    color: #4b5563;
+    font-size: 15px;
+}
+
+.stock {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+
+    span:first-child {
+        font-weight: 600;
+        color: #374151;
+    }
+}
+
+.in-stock {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.out-stock {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.success {
+    color: #16a34a;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.error {
+    margin-top: 16px;
+    color: #dc2626;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    padding: 12px 14px;
+    border-radius: 10px;
+}
+
+button[mat-button] {
+    margin-bottom: 12px;
+}
+
+mat-card-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+    .product-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .image-box {
+        max-width: 420px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .page {
+        padding: 16px;
+    }
+
+    .price {
+        font-size: 26px;
+    }
+
+    .actions {
+        flex-direction: column;
+
+        button {
+            width: 100%;
+        }
+    }
+}

@@ -23,6 +23,13 @@
   padding: 16px;
 }
 
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
 table {
   width: 100%;
   margin-top: 16px;
@@ -52,4 +59,15 @@ a[mat-raised-button] {
   padding: 10px;
   margin-bottom: 12px;
   border-radius: 4px;
+}
+
+@media (max-width: 640px) {
+  .table-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .search-field {
+    width: 100%;
+  }
 }

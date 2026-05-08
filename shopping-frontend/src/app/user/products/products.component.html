@@ -1,13 +1,4 @@
 <div class="page">
-    <div class="page-header">
-        <h2>Products</h2>
-
-        <mat-form-field appearance="outline" class="search-field">
-            <mat-label>Search products</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Search by name or description" />
-        </mat-form-field>
-    </div>
-
     <div class="success" *ngIf="message">
         {{ message }}
     </div>
@@ -16,46 +7,61 @@
         {{ errorMessage }}
     </div>
 
-    <mat-card class="table-card" *ngIf="authService.isLoggedIn() && !authService.isAdmin() && watchlist.length > 0">
+    <mat-card class="section-card">
         <mat-card-title>My Watchlist</mat-card-title>
 
-        <table mat-table [dataSource]="watchlist" class="mat-elevation-z1">
+        <mat-card-content>
+            <table mat-table [dataSource]="watchlist" class="mat-elevation-z1" *ngIf="watchlist.length > 0">
 
-            <ng-container matColumnDef="watchName">
-                <th mat-header-cell *matHeaderCellDef>Product</th>
-                <td mat-cell *matCellDef="let product">{{ product.name }}</td>
-            </ng-container>
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Product</th>
+                    <td mat-cell *matCellDef="let product">
+                        <a [routerLink]="['/products', product.productId]">
+                            {{ product.name }}
+                        </a>
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="watchPrice">
-                <th mat-header-cell *matHeaderCellDef>Price</th>
-                <td mat-cell *matCellDef="let product">
-                    {{ product.retailPrice | currency }}
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="retailPrice">
+                    <th mat-header-cell *matHeaderCellDef>Price</th>
+                    <td mat-cell *matCellDef="let product">
+                        {{ product.retailPrice | currency }}
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="watchActions">
-                <th mat-header-cell *matHeaderCellDef>Actions</th>
-                <td mat-cell *matCellDef="let product">
-                    <button mat-stroked-button color="warn" (click)="removeFromWatchlist(product.productId)">
-                        Remove
-                    </button>
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let product">
+                        <button mat-stroked-button color="warn" (click)="removeFromWatchlist(product.productId)">
+                            Remove
+                        </button>
+                    </td>
+                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="['watchName', 'watchPrice', 'watchActions']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['watchName', 'watchPrice', 'watchActions'];"></tr>
-        </table>
+                <tr mat-header-row *matHeaderRowDef="watchlistColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: watchlistColumns;"></tr>
+            </table>
+
+            <p *ngIf="watchlist.length === 0">No products in watchlist.</p>
+        </mat-card-content>
     </mat-card>
 
     <mat-card class="table-card">
-        <mat-card-title>All Products</mat-card-title>
+        <div class="table-header">
+            <mat-card-title>All Products</mat-card-title>
+
+            <mat-form-field appearance="outline" class="search-field">
+                <mat-label>Search products</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search by name or description" />
+            </mat-form-field>
+        </div>
 
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
 
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
                 <td mat-cell *matCellDef="let product">
-                    <a [routerLink]="['/products', product.productId]">
+                        <a [routerLink]="['/products', product.productId]">
                         {{ product.name }}
                     </a>
                 </td>
@@ -65,13 +71,6 @@
                 <th mat-header-cell *matHeaderCellDef>Description</th>
                 <td mat-cell *matCellDef="let product">
                     {{ product.description }}
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="quantity">
-                <th mat-header-cell *matHeaderCellDef>Stock</th>
-                <td mat-cell *matCellDef="let product">
-                    {{ product.quantity }}
                 </td>
             </ng-container>
 

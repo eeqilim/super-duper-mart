@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
 import { LoginRequest, SignupRequest } from '../shared/models/auth';
+import { CartService } from '../shared/services/cart.service';
 
 @Component({
     selector: 'app-auth',
@@ -26,6 +27,7 @@ export class AuthComponent {
 
     constructor(
         private authService: AuthService,
+        private cartService: CartService,
         private router: Router
     ) { }
 
@@ -45,7 +47,7 @@ export class AuthComponent {
                 if (this.authService.isAdmin()) {
                     this.router.navigate(['/admin/home']);
                 } else {
-                    this.router.navigate(['/products']);
+                    this.router.navigate(['/user/home']);
                 }
             },
             error: () => {
@@ -66,7 +68,8 @@ export class AuthComponent {
                 }).subscribe({
                     next: () => {
                         this.loading = false;
-                        this.router.navigate(['/products']);
+                        this.cartService.clearCart();
+                        this.router.navigate(['/user/home']);
                     },
                     error: () => {
                         this.loading = false;

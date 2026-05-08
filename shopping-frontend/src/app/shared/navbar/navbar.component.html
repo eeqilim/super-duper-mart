@@ -1,19 +1,17 @@
 <mat-toolbar color="primary" class="navbar">
 
-  <span class="brand" routerLink="/products">Super Duper Mart</span>
+  <span class="brand" [routerLink]="getHomeLink()">Super Duper Mart</span>
   <span class="spacer"></span>
 
   <ng-container *ngIf="authService.isLoggedIn()">
 
     <ng-container *ngIf="!authService.isAdmin()">
       <button mat-button routerLink="/products">Products</button>
-      <button mat-button routerLink="/user/home">Home</button>
     </ng-container>
 
     <ng-container *ngIf="authService.isAdmin()">
-      <button mat-button routerLink="/admin/home">Dashboard</button>
-      <button mat-button routerLink="/admin/product-management">Products</button>
-      <button mat-button routerLink="/admin/order-management">Orders</button>
+      <button mat-button routerLink="/admin/products">Products</button>
+      <button mat-button routerLink="/admin/orders">Orders</button>
     </ng-container>
 
   </ng-container>

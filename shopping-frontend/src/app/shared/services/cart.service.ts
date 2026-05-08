@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { CartItem } from '../models/cart-item';
+import { CartItem } from '../models/cart';
 import { Product } from '../models/product';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-    private readonly STORAGE_KEY = 'shopping_cart';
     private readonly itemsSubject = new BehaviorSubject<CartItem[]>(this.loadCart());
 
     cart$ = this.itemsSubject.asObservable();
@@ -22,9 +21,26 @@ export class CartService {
         return this.items.reduce((total, item) => total + item.product.retailPrice * item.quantity, 0);
     }
 
+    reloadCart(): void {
+        this.itemsSubject.next(this.loadCart());
+    }
+
+    private getStorageKey(): string {
+        const raw = localStorage.getItem('current_user');
+
+        if (!raw) return 'shopping_cart_guest';
+
+        try {
+            const user = JSON.parse(raw);
+            return `shopping_cart_${user.username}`;
+        } catch {
+            return 'shopping_cart_guest';
+        }
+    }
+
     addToCart(product: Product, quantity = 1): void {
         const cart = [...this.items];
-        const existingIndex = cart.findIndex(item => item.product.id === product.id);
+        const existingIndex = cart.findIndex(item => item.product.productId === product.productId);
 
         if (existingIndex > -1) {
             cart[existingIndex] = {
@@ -44,12 +60,17 @@ export class CartService {
             return;
         }
 
-        const cart = this.items.map(item => item.product.id === productId ? { ...item, quantity } : item);
+        const cart = this.items.map(item =>
+            item.product.productId === productId
+                ? { ...item, quantity }
+                : item
+        );
+
         this.saveCart(cart);
     }
 
     removeFromCart(productId: number): void {
-        const cart = this.items.filter(item => item.product.id !== productId);
+        const cart = this.items.filter(item => item.product.productId !== productId);
         this.saveCart(cart);
     }
 
@@ -58,23 +79,23 @@ export class CartService {
     }
 
     toOrderItems(): { productId: number; quantity: number }[] {
-        return this.items.map(item => ({ productId: item.product.id, quantity: item.quantity }));
+        return this.items.map(item => ({ productId: item.product.productId, quantity: item.quantity }));
     }
 
     private saveCart(cart: CartItem[]): void {
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(cart));
+        localStorage.setItem(this.getStorageKey(), JSON.stringify(cart));
         this.itemsSubject.next(cart);
     }
 
     private loadCart(): CartItem[] {
-        const raw = localStorage.getItem(this.STORAGE_KEY);
+        const raw = localStorage.getItem(this.getStorageKey());
 
         if (!raw) return [];
 
         try {
             return JSON.parse(raw) as CartItem[];
         } catch {
-            localStorage.removeItem(this.STORAGE_KEY);
+            localStorage.removeItem(this.getStorageKey());
             return [];
         }
     }

@@ -47,13 +47,20 @@
   }
 }
 
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
 .search-field {
   width: 320px;
-  margin-bottom: 16px;
 }
 
 table {
   width: 100%;
+  margin-top: 16px;
 }
 
 a[mat-stroked-button],
@@ -75,4 +82,15 @@ button {
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 16px;
+}
+
+@media (max-width: 640px) {
+  .table-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .search-field {
+    width: 100%;
+  }
 }

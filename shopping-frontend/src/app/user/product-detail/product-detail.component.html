@@ -1,5 +1,4 @@
 <div class="page">
-
     <button mat-button (click)="back()">← Back</button>
 
     <div class="error" *ngIf="errorMessage">
@@ -7,20 +6,15 @@
     </div>
 
     <mat-card *ngIf="product" class="detail-card">
-
-        <mat-card-title>{{ product.name }}</mat-card-title>
+        <mat-card-title>{{ productName }}</mat-card-title>
 
         <mat-card-content>
-
             <div class="product-layout">
-
-                <!-- Image Placeholder -->
                 <div class="image-box">
                     <mat-icon>inventory_2</mat-icon>
                 </div>
 
                 <div class="info">
-
                     <div class="price">
                         {{ product.retailPrice | currency }}
                     </div>
@@ -29,20 +23,8 @@
                         {{ product.description }}
                     </p>
 
-                    <div class="stock">
-                        <span>Stock:</span>
-                        <span [ngClass]="{
-                'in-stock': product.quantity > 0,
-                'out-stock': product.quantity === 0
-              }">
-                            {{ product.quantity > 0 ? product.quantity + ' available' : 'Out of stock' }}
-                        </span>
-                    </div>
-
                     <div class="actions">
-
-                        <button mat-raised-button color="primary" (click)="addToCart()"
-                            [disabled]="product.quantity === 0" *ngIf="!auth.isAdmin()">
+                        <button mat-raised-button color="primary" (click)="addToCart()" *ngIf="!auth.isAdmin()">
                             <mat-icon>shopping_cart</mat-icon>
                             Add to Cart
                         </button>
@@ -51,19 +33,13 @@
                             *ngIf="auth.isLoggedIn() && !auth.isAdmin()">
                             + Watchlist
                         </button>
-
                     </div>
 
-                    <div class="success" *ngIf="added">
-                        Added to cart ✓
-                    </div>
+                    <div class="success" *ngIf="addedToCart">Added to cart</div>
+                    <div class="success" *ngIf="addedToWatchlist">Added to watchlist</div>
 
                 </div>
-
             </div>
-
         </mat-card-content>
-
     </mat-card>
-
 </div>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Order } from 'src/app/shared/models/order';
 import { Product } from 'src/app/shared/models/product';
-import { FrequentPurchasedProduct, RecentPurchasedItem } from 'src/app/shared/models/stats';
+import { PurchasedProduct } from 'src/app/shared/models/stats';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
@@ -13,14 +13,12 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 })
 export class UserHomeComponent implements OnInit {
     orders: Order[] = [];
-    watchlist: Product[] = [];
-    frequentProducts: FrequentPurchasedProduct[] = [];
-    recentItems: RecentPurchasedItem[] = [];
+    frequentProducts: PurchasedProduct[] = [];
+    recentItems: PurchasedProduct[] = [];
 
     orderColumns = ['orderId', 'datePlaced', 'orderStatus', 'total', 'actions'];
-    watchlistColumns = ['name', 'retailPrice', 'actions'];
-    frequentColumns = ['name', 'totalQuantity', 'latestPurchasedPrice'];
-    recentColumns = ['name', 'quantity', 'purchasedPrice'];
+    frequentColumns = ['productName', 'quantity', 'purchasedPrice'];
+    recentColumns = ['productName', 'quantity', 'purchasedPrice', 'subtotal'];
 
     message = '';
     errorMessage = '';
@@ -28,14 +26,13 @@ export class UserHomeComponent implements OnInit {
     constructor(private apiService: ApiService, private authService: AuthService) { }
 
     ngOnInit(): void {
-        if (!this.authService.isLoggedIn()) return; // ← add this
+        if (!this.authService.isLoggedIn()) return;
         this.loadOrders();
-        this.loadWatchlist();
         this.loadStats();
     }
 
-    get pendingCount(): number {
-        return this.orders.filter(order => order.orderStatus === 'PENDING').length;
+    get processingCount(): number {
+        return this.orders.filter(order => order.orderStatus === 'PROCESSING').length;
     }
 
     get completedCount(): number {
@@ -53,27 +50,22 @@ export class UserHomeComponent implements OnInit {
         });
     }
 
-    loadWatchlist(): void {
-        this.apiService.getWatchlist().subscribe({
-            next: products => {
-                this.watchlist = products;
-            },
-            error: () => {
-                this.errorMessage = 'Failed to load watchlist.';
-            }
-        });
-    }
-
     loadStats(): void {
         this.apiService.getMostFrequentlyPurchasedProducts(3).subscribe({
             next: data => {
                 this.frequentProducts = data;
+            },
+            error: () => {
+                this.errorMessage = 'Failed to load frequent products.';
             }
         });
 
         this.apiService.getMostRecentlyPurchasedProducts(3).subscribe({
             next: data => {
                 this.recentItems = data;
+            },
+            error: () => {
+                this.errorMessage = 'Failed to load recent products.';
             }
         });
     }
@@ -90,28 +82,16 @@ export class UserHomeComponent implements OnInit {
         });
     }
 
-    removeFromWatchlist(productId: number): void {
-        this.apiService.removeFromWatchlist(productId).subscribe({
-            next: () => {
-                this.message = 'Product removed from watchlist.';
-                this.loadWatchlist();
-            },
-            error: () => {
-                this.errorMessage = 'Failed to remove product from watchlist.';
-            }
-        });
-    }
-
     getOrderTotal(order: Order): number {
-        return (order as any).totalPrice ?? (order as any).totalAmount ?? 0;
+        return order.order.reduce((sum, item) => sum + item.purchasedPrice * item.quantity, 0);
     }
 
     canCancel(order: Order): boolean {
-        return order.orderStatus === 'PENDING';
+        return order.orderStatus === 'PROCESSING';
     }
 
     statusClass(status: string): string {
-        if (status === 'PENDING') return 'status-pending';
+        if (status === 'PROCESSING') return 'status-processing';
         if (status === 'COMPLETED') return 'status-completed';
         if (status === 'CANCELED') return 'status-canceled';
         return '';

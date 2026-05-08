@@ -1,4 +1,4 @@
-import { User } from "./user";
+export type Role = 'ROLE_USER' | 'ROLE_ADMIN';
 
 export interface LoginRequest {
     username: string;
@@ -21,4 +21,11 @@ export interface AuthResponse {
     token: string;
     username: string;
     role: number;
+}
+
+export interface User {
+    userId?: number;
+    username: string;
+    email?: string;
+    role: Role;
 }

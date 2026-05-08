@@ -48,8 +48,8 @@
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Password</mat-label>
                     <input matInput type="password" name="signupPassword" [(ngModel)]="signupData.password" required
-                        minlength="6" autocomplete="new-password" />
-                    <mat-error>Password must be at least 6 characters</mat-error>
+                        minlength="3" autocomplete="new-password" />
+                    <mat-error>Password must be at least 3 characters</mat-error>
                 </mat-form-field>
 
                 <button mat-raised-button color="primary" class="full-width" type="submit"
@@ -61,7 +61,7 @@
 
         <mat-card-actions class="center-actions">
             <button mat-button color="primary" type="button" (click)="toggleMode()">
-                {{ isLoginMode ? 'Need an account? signup' : 'Already have an account? Login' }}
+                {{ isLoginMode ? 'Need an account? Signup' : 'Already have an account? Login' }}
             </button>
         </mat-card-actions>
     </mat-card>

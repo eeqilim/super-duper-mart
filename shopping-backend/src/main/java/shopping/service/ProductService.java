@@ -31,7 +31,13 @@ public class ProductService {
     // USER
     @Transactional(readOnly = true)
     public ProductDto getProductDetailById(Long productId) {
-        Product product = productDao.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        Product product = productDao.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        if (product.getQuantity() <= 0) {
+            throw new ResourceNotFoundException("Product not available");
+        }
+
         return toProductDto(product);
     }
 

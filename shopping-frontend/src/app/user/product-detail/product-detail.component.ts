@@ -14,7 +14,8 @@ import { AuthService } from '../../shared/services/auth.service';
 })
 export class ProductDetailComponent implements OnInit {
     product: Product | null = null;
-    added = false;
+    addedToCart = false;
+    addedToWatchlist = false;
     errorMessage = '';
 
     constructor(
@@ -34,19 +35,28 @@ export class ProductDetailComponent implements OnInit {
         });
     }
 
+    get productName(): string {
+        return this.product?.name || '';
+    }
+
     addToCart(): void {
         if (!this.product) return;
-
         this.cart.addToCart(this.product);
-        this.added = true;
-
-        setTimeout(() => this.added = false, 2000);
+        this.addedToCart = true;
+        this.addedToWatchlist = false;
     }
 
     addToWatchlist(): void {
         if (!this.product) return;
-
-        this.api.addToWatchlist(this.product.id).subscribe();
+        this.api.addToWatchlist(this.product.productId).subscribe({
+            next: () => {
+                this.addedToWatchlist = true;
+                this.addedToCart = false;
+            },
+            error: () => {
+                this.errorMessage = 'Failed to add to watchlist';
+            }
+        });
     }
 
     back(): void {

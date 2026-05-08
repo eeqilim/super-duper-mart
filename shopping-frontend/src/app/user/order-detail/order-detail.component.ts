@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Order } from 'src/app/shared/models/order';
-import { OrderItem } from '../../shared/models/order-item';
+import { Order, OrderItem } from 'src/app/shared/models/order';
 import { ApiService } from '../../shared/services/api.service';
 
 @Component({
@@ -16,7 +15,7 @@ export class OrderDetailComponent implements OnInit {
     message = '';
 
     displayedColumns: string[] = [
-        'product',
+        'productName',
         'price',
         'quantity',
         'subtotal',
@@ -37,7 +36,7 @@ export class OrderDetailComponent implements OnInit {
     cancelOrder(): void {
         if (!this.order) return;
 
-        this.api.cancelOrder(this.order.id).subscribe({
+        this.api.cancelOrder(this.order.orderId).subscribe({
             next: () => {
                 this.message = 'Order canceled successfully.';
                 this.order!.orderStatus = 'CANCELED';
@@ -49,7 +48,7 @@ export class OrderDetailComponent implements OnInit {
     }
 
     canCancel(): boolean {
-        return this.order?.orderStatus === 'PENDING';
+        return this.order?.orderStatus === 'PROCESSING';
     }
 
     getSubtotal(item: OrderItem): number {
@@ -57,11 +56,11 @@ export class OrderDetailComponent implements OnInit {
     }
 
     getTotal(): number {
-        return this.order?.orderItems.reduce((sum, item) => sum + this.getSubtotal(item), 0) || 0;
+        return this.order?.order.reduce((sum, item) => sum + this.getSubtotal(item), 0) || 0;
     }
 
     statusClass(status: string): string {
-        if (status === 'PENDING') return 'status-pending';
+        if (status === 'PROCESSING') return 'status-processing';
         if (status === 'COMPLETED') return 'status-completed';
         if (status === 'CANCELED') return 'status-canceled';
         return '';

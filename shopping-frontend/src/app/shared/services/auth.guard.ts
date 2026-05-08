@@ -15,7 +15,9 @@ export class AuthGuard implements CanActivate {
     const userRole = this.auth.getCurrentUser()?.role;
 
     if (roles?.length && (!userRole || !roles.includes(userRole))) {
-      return this.router.createUrlTree(['/products']);
+      return this.router.createUrlTree([
+        userRole === 'ROLE_ADMIN' ? '/admin/home' : '/products'
+      ]);
     }
 
     return true;

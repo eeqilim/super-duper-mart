@@ -18,35 +18,20 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = [
         'name',
         'description',
-        'quantity',
         'retailPrice',
         'actions'
     ];
 
     dataSource = new MatTableDataSource<Product>([]);
     watchlist: Product[] = [];
+    watchlistColumns = ['name', 'retailPrice', 'actions'];
 
     message = '';
     errorMessage = '';
 
-    constructor(
-        private apiService: ApiService,
-        private cartService: CartService,
-        public authService: AuthService
-    ) { }
+    constructor(private apiService: ApiService, private cartService: CartService, public authService: AuthService) { }
 
     ngOnInit(): void {
-        if (this.authService.isAdmin()) {
-            this.displayedColumns = [
-                'name',
-                'description',
-                'quantity',
-                'retailPrice',
-                'wholesalePrice',
-                'actions'
-            ];
-        }
-
         this.loadProducts();
 
         if (this.authService.isLoggedIn() && !this.authService.isAdmin()) {
@@ -106,7 +91,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         this.apiService.removeFromWatchlist(productId).subscribe({
             next: () => {
                 this.watchlist = this.watchlist.filter(
-                    product => product.id !== productId
+                    product => product.productId !== productId
                 );
             },
             error: () => {

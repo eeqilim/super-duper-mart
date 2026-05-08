@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Order } from '../../shared/models/order';
-import { PopularProduct, ProfitableProduct } from 'src/app/shared/models/stats';
+
+import { PopularProduct, ProductProfit } from 'src/app/shared/models/stats';
 import { ApiService } from '../../shared/services/api.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { AdminOrder } from 'src/app/shared/models/order';
 
 @Component({
     selector: 'app-admin-home',
@@ -10,34 +11,43 @@ import { AuthService } from 'src/app/shared/services/auth.service';
     styleUrls: ['./admin-home.component.scss']
 })
 export class AdminHomeComponent implements OnInit {
-    orders: Order[] = [];
+    orders: AdminOrder[] = [];
     popularProducts: PopularProduct[] = [];
-    profitableProducts: ProfitableProduct[] = [];
+    profitableProducts: ProductProfit[] = [];
 
-    popularColumns = ['name', 'totalSold'];
-    profitColumns = ['name', 'totalProfit'];
-    orderColumns = ['orderId', 'datePlaced', 'orderStatus', 'total', 'actions'];
+    popularColumns = ['productName', 'totalSold'];
+    profitColumns = ['productName', 'totalProfit'];
+    orderColumns = ['orderId', 'userName', 'datePlaced', 'orderStatus', 'total', 'actions'];
 
     message = '';
     errorMessage = '';
 
-    constructor(private apiService: ApiService, private authService: AuthService) { }
+    constructor(
+        private apiService: ApiService,
+        private authService: AuthService
+    ) { }
 
     ngOnInit(): void {
         if (!this.authService.isLoggedIn()) return;
         this.loadDashboard();
     }
 
-    get pendingCount(): number {
-        return this.orders.filter(order => order.orderStatus === 'PENDING').length;
+    get processingCount(): number {
+        return this.orders.filter(order => order.orderStatus === 'PROCESSING').length;
     }
 
     get completedCount(): number {
         return this.orders.filter(order => order.orderStatus === 'COMPLETED').length;
     }
 
-    get mostProfitableProduct(): ProfitableProduct | null {
+    get mostProfitableProduct(): ProductProfit | null {
         return this.profitableProducts.length > 0 ? this.profitableProducts[0] : null;
+    }
+
+    get totalSuccessfullySoldItems(): number {
+        return this.orders
+            .filter(order => order.orderStatus === 'COMPLETED')
+            .reduce((sum, order) => sum + order.order.reduce((itemSum, item) => itemSum + item.quantity, 0), 0);
     }
 
     loadDashboard(): void {
@@ -46,7 +56,7 @@ export class AdminHomeComponent implements OnInit {
     }
 
     loadOrders(): void {
-        this.apiService.getOrders().subscribe({
+        this.apiService.getAdminOrders().subscribe({
             next: orders => {
                 this.orders = orders;
             },
@@ -100,16 +110,16 @@ export class AdminHomeComponent implements OnInit {
         });
     }
 
-    canUpdate(order: Order): boolean {
-        return order.orderStatus === 'PENDING';
+    canUpdate(order: AdminOrder): boolean {
+        return order.orderStatus === 'PROCESSING';
     }
 
-    getOrderTotal(order: Order): number {
-        return (order as any).totalPrice ?? (order as any).totalAmount ?? 0;
+    getOrderTotal(order: AdminOrder): number {
+        return order.order.reduce((sum, item) => sum + item.purchasedPrice * item.quantity, 0);
     }
 
     statusClass(status: string): string {
-        if (status === 'PENDING') return 'status-pending';
+        if (status === 'PROCESSING') return 'status-processing';
         if (status === 'COMPLETED') return 'status-completed';
         if (status === 'CANCELED') return 'status-canceled';
         return '';

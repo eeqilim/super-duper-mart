@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { User } from '../models/user';
-import { AuthResponse, LoginRequest, SignupRequest } from '../models/auth';
+import { AuthResponse, LoginRequest, SignupRequest, SignupResponse, User } from '../models/auth';
+import { CartService } from './cart.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root'
+})
 export class AuthService {
     private readonly API = 'http://localhost:8081';
     private readonly TOKEN_KEY = 'jwt_token';
@@ -13,22 +15,26 @@ export class AuthService {
 
     currentUser$ = new BehaviorSubject<User | null>(this.storedUser());
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(
+        private http: HttpClient,
+        private router: Router,
+        private cartService: CartService
+    ) { }
 
     login(request: LoginRequest): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(`${this.API}/login`, request)
-            .pipe(tap(response => this.store(response)));
+        return this.http.post<AuthResponse>(`${this.API}/login`, request).pipe(tap(response => this.store(response)));
     }
 
-    signup(request: SignupRequest): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(`${this.API}/signup`, request)
-            .pipe(tap(response => this.store(response)));
+    signup(request: SignupRequest): Observable<SignupResponse> {
+        return this.http.post<SignupResponse>(`${this.API}/signup`, request);
     }
 
     logout(): void {
         localStorage.removeItem(this.TOKEN_KEY);
         localStorage.removeItem(this.USER_KEY);
+
         this.currentUser$.next(null);
+        this.cartService.reloadCart();
         this.router.navigate(['/auth']);
     }
 
@@ -57,13 +63,13 @@ export class AuthService {
     }
 
     private store(response: AuthResponse): void {
-        const user: User = {
-            username: response.username,
-            role: response.role === 1 ? 'ROLE_ADMIN' : 'ROLE_USER'
-        };
+        const user: User = { username: response.username, role: response.role === 1 ? 'ROLE_ADMIN' : 'ROLE_USER' };
+
         localStorage.setItem(this.TOKEN_KEY, response.token);
         localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+
         this.currentUser$.next(user);
+        this.cartService.reloadCart();
     }
 
     private storedUser(): User | null {

@@ -11,6 +11,7 @@ import { OrderDetailComponent } from './user/order-detail/order-detail.component
 import { AdminHomeComponent } from './admin/home/admin-home.component';
 import { ProductManagementComponent } from './admin/product-management/product-management.component';
 import { OrderManagementComponent } from './admin/order-management/order-management.component';
+import { ProductEditComponent } from './admin/product-edit/product-edit.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
@@ -52,16 +53,32 @@ const routes: Routes = [
     data: { roles: ['ROLE_ADMIN'] }
   },
   {
-    path: 'admin/product-management',
+    path: 'admin/products',
     component: ProductManagementComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_ADMIN'] }
   },
   {
-    path: 'admin/order-management',
+    path: 'admin/product-management',
+    redirectTo: 'admin/products',
+    pathMatch: 'full'
+  },
+  {
+    path: 'admin/products/:id/edit',
+    component: ProductEditComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'admin/orders',
     component: OrderManagementComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'admin/order-management',
+    redirectTo: 'admin/orders',
+    pathMatch: 'full'
   },
   { path: '**', redirectTo: 'auth' }
 ];

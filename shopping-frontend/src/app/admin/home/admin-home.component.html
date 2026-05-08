@@ -16,8 +16,8 @@
         </mat-card>
 
         <mat-card>
-            <div class="label">Pending Orders</div>
-            <div class="value pending">{{ pendingCount }}</div>
+            <div class="label">Processing Orders</div>
+            <div class="value processing">{{ processingCount }}</div>
         </mat-card>
 
         <mat-card>
@@ -25,14 +25,31 @@
             <div class="value completed">{{ completedCount }}</div>
         </mat-card>
 
-        <mat-card *ngIf="mostProfitableProduct">
-            <div class="label">Most Profitable</div>
+        <mat-card class="sold-items-card">
+            <div class="label">Successfully Sold Items</div>
+            <div class="value completed">
+                {{ totalSuccessfullySoldItems }}
+            </div>
+            <a mat-stroked-button color="primary" routerLink="/admin/orders"
+                [queryParams]="{ filter: 'COMPLETED' }">
+                View Sold Items
+            </a>
+        </mat-card>
+
+        <mat-card class="profit-card" *ngIf="mostProfitableProduct as product">
+            <div class="label">Most Profitable Product</div>
+
             <div class="product-name">
-                {{ mostProfitableProduct.productName }}
+                {{ product.productName }}
             </div>
+
             <div class="profit">
-                {{ mostProfitableProduct.totalProfit | currency }}
+                Profit: {{ product.totalProfit | currency }}
             </div>
+
+            <a mat-stroked-button color="primary" [routerLink]="['/products', product.productId]">
+                View Product
+            </a>
         </mat-card>
     </div>
 
@@ -43,11 +60,11 @@
             <mat-card-content>
                 <table mat-table [dataSource]="popularProducts" *ngIf="popularProducts.length > 0">
 
-                    <ng-container matColumnDef="name">
+                    <ng-container matColumnDef="productName">
                         <th mat-header-cell *matHeaderCellDef>Product</th>
                         <td mat-cell *matCellDef="let product">
                             <a [routerLink]="['/products', product.productId]">
-                                {{ product.name }}
+                                {{ product.productName }}
                             </a>
                         </td>
                     </ng-container>
@@ -73,11 +90,11 @@
             <mat-card-content>
                 <table mat-table [dataSource]="profitableProducts" *ngIf="profitableProducts.length > 0">
 
-                    <ng-container matColumnDef="name">
+                    <ng-container matColumnDef="productName">
                         <th mat-header-cell *matHeaderCellDef>Product</th>
                         <td mat-cell *matCellDef="let product">
                             <a [routerLink]="['/products', product.productId]">
-                                {{ product.name }}
+                                {{ product.productName }}
                             </a>
                         </td>
                     </ng-container>
@@ -106,23 +123,26 @@
 
                 <ng-container matColumnDef="orderId">
                     <th mat-header-cell *matHeaderCellDef>Order ID</th>
+                    <td mat-cell *matCellDef="let order">{{ order.orderId }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="userName">
+                    <th mat-header-cell *matHeaderCellDef>Customer</th>
                     <td mat-cell *matCellDef="let order">
-                        #{{ order.orderId }}
+                        {{ order.userName || order.userId || 'N/A' }}
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="datePlaced">
                     <th mat-header-cell *matHeaderCellDef>Date</th>
-                    <td mat-cell *matCellDef="let order">
-                        {{ order.datePlaced | date:'short' }}
-                    </td>
+                    <td mat-cell *matCellDef="let order">{{ order.datePlaced | date:'short' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="orderStatus">
                     <th mat-header-cell *matHeaderCellDef>Status</th>
                     <td mat-cell *matCellDef="let order">
                         <span class="status-badge" [ngClass]="statusClass(order.orderStatus)">
-                            {{ order.orderStatus }}
+                            {{order.orderStatus}}
                         </span>
                     </td>
                 </ng-container>

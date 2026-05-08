@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Order } from '../../shared/models/order';
+import { ActivatedRoute } from '@angular/router';
+import { AdminOrder } from '../../shared/models/order';
 import { ApiService } from '../../shared/services/api.service';
 
-type OrderFilter = 'ALL' | 'PENDING' | 'COMPLETED' | 'CANCELED';
+type OrderFilter = 'ALL' | 'PROCESSING' | 'COMPLETED' | 'CANCELED';
 
 @Component({
     selector: 'app-order-management',
@@ -10,7 +11,7 @@ type OrderFilter = 'ALL' | 'PENDING' | 'COMPLETED' | 'CANCELED';
     styleUrls: ['./order-management.component.scss']
 })
 export class OrderManagementComponent implements OnInit {
-    orders: Order[] = [];
+    orders: AdminOrder[] = [];
     filter: OrderFilter = 'ALL';
 
     displayedColumns: string[] = [
@@ -26,14 +27,19 @@ export class OrderManagementComponent implements OnInit {
     message = '';
     errorMessage = '';
 
-    constructor(private apiService: ApiService) { }
+    constructor(private apiService: ApiService, private route: ActivatedRoute) { }
 
     ngOnInit(): void {
+        const queryFilter = this.route.snapshot.queryParamMap.get('filter');
+        if (this.isOrderFilter(queryFilter)) {
+            this.filter = queryFilter;
+        }
+
         this.loadOrders();
     }
 
     loadOrders(): void {
-        this.apiService.getOrders().subscribe({
+        this.apiService.getAdminOrders().subscribe({
             next: orders => this.orders = orders,
             error: () => this.errorMessage = 'Failed to load orders.'
         });
@@ -43,7 +49,14 @@ export class OrderManagementComponent implements OnInit {
         this.filter = filter;
     }
 
-    get filteredOrders(): Order[] {
+    private isOrderFilter(value: string | null): value is OrderFilter {
+        return value === 'ALL'
+            || value === 'PROCESSING'
+            || value === 'COMPLETED'
+            || value === 'CANCELED';
+    }
+
+    get filteredOrders(): AdminOrder[] {
         return this.filter === 'ALL'
             ? this.orders
             : this.orders.filter(o => o.orderStatus === this.filter);
@@ -69,16 +82,16 @@ export class OrderManagementComponent implements OnInit {
         });
     }
 
-    canUpdate(order: Order): boolean {
-        return order.orderStatus === 'PENDING';
+    canUpdate(order: AdminOrder): boolean {
+        return order.orderStatus === 'PROCESSING';
     }
 
-    getOrderTotal(order: Order): number {
-        return (order as any).totalPrice ?? (order as any).totalAmount ?? 0;
+    getOrderTotal(order: AdminOrder): number {
+        return order.order.reduce((sum, item) => sum + item.purchasedPrice * item.quantity, 0);
     }
 
     statusClass(status: string): string {
-        if (status === 'PENDING') return 'status-pending';
+        if (status === 'PROCESSING') return 'status-processing';
         if (status === 'COMPLETED') return 'status-completed';
         if (status === 'CANCELED') return 'status-canceled';
         return '';

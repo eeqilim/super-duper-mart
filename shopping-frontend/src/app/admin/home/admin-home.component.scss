@@ -27,12 +27,16 @@
     margin-top: 6px;
   }
 
-  .pending {
+  .processing {
     color: #d97706;
   }
 
   .completed {
     color: #16a34a;
+  }
+
+  .sold-items-card a[mat-stroked-button] {
+    margin-top: 10px;
   }
 
   .product-name {
@@ -41,10 +45,25 @@
     color: #111827;
   }
 
-  .profit {
-    margin-top: 4px;
-    color: #2563eb;
-    font-weight: 600;
+  .profit-card {
+    padding: 16px;
+
+    .label {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .product-name {
+      margin-top: 8px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .profit {
+      margin: 8px 0 12px;
+      color: #16a34a;
+      font-weight: 600;
+    }
   }
 }
 
@@ -89,7 +108,7 @@ a[mat-stroked-button] {
   font-weight: 600;
 }
 
-.status-pending {
+.status-processing {
   background: #fef3c7;
   color: #92400e;
 }

@@ -5,8 +5,8 @@
 
         <div class="filters">
             <button mat-stroked-button (click)="setFilter('ALL')" [class.active]="filter==='ALL'">All</button>
-            <button mat-stroked-button (click)="setFilter('PENDING')"
-                [class.active]="filter==='PENDING'">Pending</button>
+            <button mat-stroked-button (click)="setFilter('PROCESSING')"
+                [class.active]="filter==='PROCESSING'">Processing</button>
             <button mat-stroked-button (click)="setFilter('COMPLETED')"
                 [class.active]="filter==='COMPLETED'">Completed</button>
             <button mat-stroked-button (click)="setFilter('CANCELED')"
@@ -28,13 +28,13 @@
 
                 <ng-container matColumnDef="orderId">
                     <th mat-header-cell *matHeaderCellDef>ID</th>
-                    <td mat-cell *matCellDef="let o">#{{ o.orderId }}</td>
+                    <td mat-cell *matCellDef="let o">{{ o.orderId }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="customer">
                     <th mat-header-cell *matHeaderCellDef>Customer</th>
                     <td mat-cell *matCellDef="let o">
-                        {{ o.user?.username || o.userId || 'N/A' }}
+                        {{ o.userName || o.userId || 'N/A' }}
                     </td>
                 </ng-container>
 
@@ -49,7 +49,7 @@
                 <ng-container matColumnDef="items">
                     <th mat-header-cell *matHeaderCellDef>Items</th>
                     <td mat-cell *matCellDef="let o">
-                        {{ o.items.length }}
+                        {{ o.order.length }}
                     </td>
                 </ng-container>
 
