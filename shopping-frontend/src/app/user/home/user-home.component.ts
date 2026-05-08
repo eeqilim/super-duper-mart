@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Order } from 'src/app/shared/models/order';
-import { Product } from 'src/app/shared/models/product';
 import { PurchasedProduct } from 'src/app/shared/models/stats';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
